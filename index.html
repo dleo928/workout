@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Workout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0c0c;--s1:#161616;--s2:#1f1f1f;
+  --b1:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.11);
+  --t1:#f2efe9;--t2:#999;--t3:#555;
+  --g:#b8f060;--g2:rgba(184,240,96,0.12);--g3:rgba(184,240,96,0.06);
+  --bl:#60c4f0;--o:#f0a060;--r:#f06060;
+  --mono:'IBM Plex Mono',monospace;--head:'Syne',sans-serif;--rad:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100vh;overflow-x:hidden}
+.app{max-width:430px;margin:0 auto;padding-bottom:90px}
+
+/* ── HEADER ── */
+.hdr{padding:24px 18px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.hdr h1{font-size:22px;font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.hdr p{font-family:var(--mono);font-size:10px;color:var(--t2);margin-top:5px;letter-spacing:.05em}
+.week-chip{font-family:var(--mono);font-size:10px;color:var(--g);background:var(--g3);border:1px solid rgba(184,240,96,.2);padding:4px 10px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+
+/* ── MODE TOGGLE ── */
+.mode-row{padding:0 18px 14px;display:flex;gap:6px}
+.mbtn{flex:1;font-family:var(--mono);font-size:11px;padding:9px 6px;border-radius:var(--rad);border:1px solid var(--b1);background:transparent;color:var(--t2);cursor:pointer;transition:all .18s;letter-spacing:.03em}
+.mbtn.on{background:var(--s2);color:var(--t1);border-color:var(--b2)}
+
+/* ── DAY TABS ── */
+.tabs{display:flex;gap:7px;padding:0 18px 16px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;font-family:var(--mono);font-size:10px;padding:7px 13px;border-radius:99px;border:1px solid var(--b1);background:transparent;color:var(--t3);cursor:pointer;transition:all .18s;white-space:nowrap;letter-spacing:.04em}
+.tab.on{background:var(--g);color:#0c0c0c;border-color:var(--g);font-weight:500}
+.tab.done:not(.on){border-color:rgba(184,240,96,.25);color:rgba(184,240,96,.5)}
+.tab.partial:not(.on){border-color:rgba(240,160,96,.3);color:rgba(240,160,96,.5)}
+
+/* ── SESSION HEAD ── */
+.s-head{padding:0 18px 14px}
+.s-title{font-size:20px;font-weight:600;letter-spacing:-.02em}
+.s-meta{font-family:var(--mono);font-size:10px;color:var(--t2);margin-top:4px;letter-spacing:.03em}
+.focus-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ftag{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:99px;border:1px solid}
+.ftag.pri{color:var(--g);border-color:rgba(184,240,96,.3);background:var(--g3)}
+.ftag.sec{color:var(--t3);border-color:var(--b1)}
+
+/* ── SECTION LABEL ── */
+.slbl{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);padding:14px 18px 7px}
+
+/* ── EXERCISE CARD ── */
+.ec{margin:0 18px 8px;border:1px solid var(--b1);border-radius:var(--rad);background:var(--s1);overflow:hidden;transition:border-color .18s}
+.ec.open{border-color:var(--b2)}
+.ec-hdr{display:flex;align-items:center;gap:11px;padding:13px 15px;cursor:pointer;user-select:none}
+.edot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dp{background:#a07af0}.dt{background:var(--bl)}.da{background:var(--o)}
+.e-info{flex:1;min-width:0}
+.e-name{font-size:13px;font-weight:500;line-height:1.3}
+.e-sets{font-family:var(--mono);font-size:10px;color:var(--t2);margin-top:2px}
+.e-known{font-family:var(--mono);font-size:9px;color:var(--bl);border:1px solid rgba(96,196,240,.3);padding:1px 6px;border-radius:99px;margin-left:5px;vertical-align:middle;white-space:nowrap}
+.echev{font-size:11px;color:var(--t3);transition:transform .18s;flex-shrink:0}
+.ec.open .echev{transform:rotate(180deg)}
+.e-detail{display:none;border-top:1px solid var(--b1)}
+.ec.open .e-detail{display:block}
+
+/* ── EXRX LINK CARD ── */
+.exrx-card{display:flex;align-items:center;gap:12px;margin:14px 15px 4px;padding:13px 14px;background:var(--s2);border-radius:var(--rad);border:1px solid var(--b1);text-decoration:none;cursor:pointer;transition:border-color .15s,background .15s}
+.exrx-card:hover{border-color:var(--b2);background:#242424}
+.exrx-badge{flex-shrink:0;width:38px;height:38px;border-radius:8px;background:#1a3a2a;border:1px solid rgba(184,240,96,.2);display:flex;align-items:center;justify-content:center}
+.exrx-badge span{font-family:var(--mono);font-size:9px;font-weight:500;color:var(--g);letter-spacing:.04em}
+.exrx-text{flex:1;min-width:0}
+.exrx-title{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exrx-sub{font-family:var(--mono);font-size:9px;color:var(--t3)}
+.exrx-arrow{font-size:14px;color:var(--t3);flex-shrink:0}
+
+/* ── CUES ── */
+.cues{padding:13px 15px}
+.cues-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--t3);text-transform:uppercase;margin-bottom:9px}
+.cue{display:flex;gap:9px;margin-bottom:7px;font-size:12px;line-height:1.5;font-weight:400;color:var(--t1)}
+.cue-n{font-family:var(--mono);font-size:9px;color:var(--g);flex-shrink:0;margin-top:3px}
+.e-note{margin:0 15px 13px;padding:9px 11px;background:var(--g3);border-left:2px solid rgba(184,240,96,.35);border-radius:0 6px 6px 0;font-family:var(--mono);font-size:10px;color:rgba(184,240,96,.8);line-height:1.5}
+
+/* ── LOG BUTTONS ── */
+.log-wrap{padding:6px 18px 12px;display:flex;gap:8px}
+.log-btn{padding:13px;border-radius:var(--rad);border:1px solid var(--b2);background:transparent;color:var(--t1);font-family:var(--head);font-size:13px;font-weight:500;cursor:pointer;transition:all .18s}
+.log-btn:active{transform:scale(.98)}
+.log-btn.logged{background:var(--g2);border-color:rgba(184,240,96,.4);color:var(--g)}
+.log-btn.partial-btn{background:rgba(240,160,96,.08);border-color:rgba(240,160,96,.3);color:var(--o)}
+
+/* ── COACH NOTE ── */
+.coach{margin:4px 18px 6px;padding:11px 13px;border-left:2px solid rgba(240,160,96,.4);background:rgba(240,160,96,.05);border-radius:0 8px 8px 0}
+.coach-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--o);text-transform:uppercase;margin-bottom:4px}
+.coach p{font-size:12px;color:rgba(240,160,96,.85);line-height:1.6;font-weight:400}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(12,12,12,.94);backdrop-filter:blur(14px);border-top:1px solid var(--b1);display:flex;padding:10px 12px 22px;gap:4px;z-index:100}
+.nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:8px;border:none;background:transparent;color:var(--t3);cursor:pointer;font-family:var(--head);transition:color .15s}
+.nbtn.on{color:var(--g)}
+.n-ic{font-size:17px;line-height:1}
+.n-lb{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase}
+
+/* ── VIEWS ── */
+.view{display:none}.view.on{display:block}
+
+/* ── PROGRESS ── */
+.pv{padding:20px 18px}
+.pv h2{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-bottom:18px}
+.stat-g{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px}
+.stat{background:var(--s1);border-radius:var(--rad);padding:14px;border:1px solid var(--b1)}
+.stat-v{font-family:var(--mono);font-size:26px;color:var(--g);font-weight:500}
+.stat-l{font-family:var(--mono);font-size:9px;color:var(--t2);margin-top:3px;letter-spacing:.04em}
+.week-hist{background:var(--s1);border-radius:var(--rad);padding:15px;border:1px solid var(--b1);margin-bottom:12px}
+.wh-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.wh-title{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.wh-nav{display:flex;gap:8px;align-items:center}
+.wh-nav button{background:none;border:none;color:var(--t2);cursor:pointer;font-size:14px;padding:2px 4px;font-family:var(--mono)}
+.wh-nav span{font-family:var(--mono);font-size:10px;color:var(--t2)}
+.wdots{display:flex;gap:6px}
+.wd-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.wd{width:100%;height:28px;border-radius:4px;background:var(--s2);border:1px solid var(--b1)}
+.wd.done{background:rgba(184,240,96,.18);border-color:rgba(184,240,96,.4)}
+.wd.partial{background:rgba(240,160,96,.14);border-color:rgba(240,160,96,.3)}
+.wd-l{font-family:var(--mono);font-size:8px;color:var(--t3)}
+.history-sec{margin-top:4px}
+.hist-title{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+.hist-week{margin-bottom:14px}
+.hw-label{font-family:var(--mono);font-size:10px;color:var(--t2);margin-bottom:6px}
+.hist-item{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;background:var(--s1);border-radius:7px;margin-bottom:5px;border:1px solid var(--b1)}
+.hi-name{font-size:12px;font-weight:400}
+.hi-date{font-family:var(--mono);font-size:9px;color:var(--t3)}
+.hi-partial{font-family:var(--mono);font-size:9px;color:var(--o);margin-left:6px}
+.empty-hist{font-family:var(--mono);font-size:11px;color:var(--t3);padding:12px 0}
+.clr-btn{width:100%;padding:12px;border-radius:var(--rad);border:1px solid var(--b2);background:transparent;color:var(--r);font-family:var(--head);font-size:12px;cursor:pointer;margin-top:6px}
+
+/* ── GUIDE ── */
+.gv{padding:20px 18px}
+.gv h2{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+.gv .sub{font-family:var(--mono);font-size:11px;color:var(--t2);margin-bottom:18px}
+.g-card{background:var(--s1);border-radius:var(--rad);padding:15px;margin-bottom:10px;border:1px solid var(--b1)}
+.g-card h3{font-size:13px;font-weight:600;color:var(--g);margin-bottom:7px}
+.g-card p{font-size:12px;color:var(--t2);line-height:1.65;font-weight:400}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ── WORKOUT VIEW ── -->
+<div class="view on" id="vw">
+  <div class="hdr">
+    <div>
+      <h1>Train long.<br>Train strong.</h1>
+      <p>STRENGTH · LONGEVITY · HOME</p>
+    </div>
+    <span class="week-chip" id="wk-chip">Wk 1 · 0 done</span>
+  </div>
+  <div class="mode-row">
+    <button class="mbtn on" id="b3" onclick="setMode(3)">3-day week</button>
+    <button class="mbtn" id="b4" onclick="setMode(4)">4-day week</button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div id="sess"></div>
+</div>
+
+<!-- ── PROGRESS VIEW ── -->
+<div class="view" id="vp">
+  <div class="pv">
+    <h2>Progress</h2>
+    <div class="stat-g">
+      <div class="stat"><div class="stat-v" id="st-tot">0</div><div class="stat-l">total sessions</div></div>
+      <div class="stat"><div class="stat-v" id="st-str">0</div><div class="stat-l">week streak</div></div>
+      <div class="stat"><div class="stat-v" id="st-wk">0</div><div class="stat-l">this week</div></div>
+      <div class="stat"><div class="stat-v" id="st-comp">0%</div><div class="stat-l">avg completion</div></div>
+    </div>
+    <div class="week-hist">
+      <div class="wh-top">
+        <span class="wh-title">weekly view</span>
+        <div class="wh-nav">
+          <button onclick="prevWeek()">←</button>
+          <span id="wh-label">this week</span>
+          <button onclick="nextWeek()">→</button>
+        </div>
+      </div>
+      <div class="wdots" id="wdots"></div>
+    </div>
+    <div class="history-sec">
+      <div class="hist-title">session history</div>
+      <div id="hist-list"></div>
+    </div>
+    <button class="clr-btn" onclick="clearAll()">Clear all data</button>
+  </div>
+</div>
+
+<!-- ── GUIDE VIEW ── -->
+<div class="view" id="vg">
+  <div class="gv">
+    <h2>Programme guide</h2>
+    <p class="sub">Principles behind the plan.</p>
+    <div class="g-card"><h3>Priority areas</h3><p>Back, shoulders, and legs are targeted with the most volume and heaviest compound movements. Both modes lead each session with priority muscles before fatigue sets in.</p></div>
+    <div class="g-card"><h3>Progressive overload</h3><p>The only driver of long-term muscle growth. Every 1–2 weeks, add one rep or a small weight increase on your main lifts. No spreadsheet needed — a mental note of last session is enough.</p></div>
+    <div class="g-card"><h3>Zone 2 cardio</h3><p>Your VO₂ max of 52 is excellent. Zone 2 (~130–145 bpm) maintains mitochondrial density and metabolic health. Conversational pace — if you can't speak in sentences, ease off.</p></div>
+    <div class="g-card"><h3>Weekly tracking</h3><p>Each week (Mon–Sun) is its own record. Incomplete weeks are preserved in history in amber. A new week starts automatically on Monday. Tap "Partial" if you only finish part of a session.</p></div>
+    <div class="g-card"><h3>Rest and recovery</h3><p>Muscle grows during recovery. Aim for 7–9 hrs sleep. Protein ~0.8–1g per kg bodyweight. Space strength days with at least one rest day between them.</p></div>
+    <div class="g-card"><h3>Joint health</h3><p>Floor press instead of bench, goblet squats, slow eccentrics on lateral raises, dead hangs for spine and shoulder health. Longevity is built in, not added on.</p></div>
+    <div class="g-card"><h3>Equipment tip</h3><p>A doorframe pull-up bar (~€20) is the single best upgrade — used for dead hangs and eventually pull-ups.</p></div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="bnav">
+  <button class="nbtn on" id="n-w" onclick="showView('w')"><span class="n-ic">◈</span><span class="n-lb">Workout</span></button>
+  <button class="nbtn" id="n-p" onclick="showView('p')"><span class="n-ic">◎</span><span class="n-lb">Progress</span></button>
+  <button class="nbtn" id="n-g" onclick="showView('g')"><span class="n-ic">◻</span><span class="n-lb">Guide</span></button>
+</nav>
+</div>
+
+<script>
+// ── EXRX URL DATABASE ──────────────────────────────────────────────────────
+// All URLs verified via search. ExRx.net is a free, professionally maintained
+// exercise reference site used by coaches and universities since 1999.
+// Each page contains a looping GIF animation showing correct form.
+const EXRX = {
+  "EZ bar bent-over row":
+    "https://exrx.net/WeightExercises/BackGeneral/DBBentOverRow",
+  "Dumbbell single-arm row":
+    "https://exrx.net/WeightExercises/BackGeneral/DBBentOverRow",
+  "Dumbbell rear delt fly":
+    "https://exrx.net/WeightExercises/DeltoidPosterior/DBRearLateralRaise",
+  "Dumbbell curl":
+    "https://exrx.net/WeightExercises/Biceps/DBCurl",
+  "EZ bar reverse curl":
+    "https://exrx.net/WeightExercises/Brachioradialis/BBReverseCurl",
+  "Dumbbell military press (seated floor)":
+    "https://exrx.net/WeightExercises/DeltoidAnterior/DBShoulderPress",
+  "Dumbbell lateral raise":
+    "https://exrx.net/WeightExercises/DeltoidLateral/DBLateralRaise",
+  "Dumbbell floor press":
+    "https://exrx.net/WeightExercises/PectoralSternal/DBBenchPress",
+  "Dumbbell flys (floor)":
+    "https://exrx.net/WeightExercises/PectoralSternal/DBFly",
+  "EZ bar skullcrusher":
+    "https://exrx.net/WeightExercises/Triceps/BBLyingTriExtSC",
+  "Dumbbell Bulgarian split squat":
+    "https://exrx.net/WeightExercises/GluteusMaximus/DBSplitSquat",
+  "Dumbbell goblet squat":
+    "https://exrx.net/WeightExercises/Kettlebell/KBGobletSquat",
+  "Stiff-leg deadlift":
+    "https://exrx.net/WeightExercises/Hamstrings/DBStrBackStrLegDeadlift",
+  "Dumbbell Romanian deadlift":
+    "https://exrx.net/WeightExercises/OlympicLifts/RomanianDeadlift",
+  "Dumbbell reverse lunge":
+    "https://exrx.net/WeightExercises/Quadriceps/DBRearLunge",
+  "Glute bridge with dumbbell":
+    "https://exrx.net/WeightExercises/GluteusMaximus/BBHipThrust",
+  "Brisk walk, jog, or cycling":
+    "https://exrx.net/Aerobic/AerobicGuidelines",
+  "Dead hang (doorframe or bar)":
+    "https://exrx.net/Stretches/BackGeneral/FixedBar",
+  "90/90 hip stretch":
+    "https://exrx.net/Stretches/HipFlexors/LyingHipFlexor",
+  "World's greatest stretch":
+    "https://exrx.net/Stretches/HipFlexors/LungeTwist",
+};
+
+// ── EXERCISE DATA ──────────────────────────────────────────────────────────
+const SETS = {
+  "EZ bar bent-over row":                   "4 × 6–8 reps",
+  "Dumbbell single-arm row":                "3 × 8–10 each side",
+  "Dumbbell rear delt fly":                 "3 × 15 reps",
+  "Dumbbell curl":                          "3 × 10–12 reps",
+  "EZ bar reverse curl":                    "2 × 12 reps",
+  "Dumbbell military press (seated floor)": "4 × 6–8 reps",
+  "Dumbbell lateral raise":                 "4 × 12–15 reps",
+  "Dumbbell floor press":                   "3 × 8–10 reps",
+  "Dumbbell flys (floor)":                  "3 × 10–12 reps",
+  "EZ bar skullcrusher":                    "3 × 10–12 reps",
+  "Dumbbell Bulgarian split squat":         "4 × 8–10 each side",
+  "Dumbbell goblet squat":                  "4 × 10–12 reps",
+  "Stiff-leg deadlift":                     "4 × 8–10 reps",
+  "Dumbbell Romanian deadlift":             "3 × 10 reps",
+  "Dumbbell reverse lunge":                 "3 × 10 each side",
+  "Glute bridge with dumbbell":             "3 × 15 reps",
+  "Brisk walk, jog, or cycling":            "25–30 min · 130–145 bpm",
+  "Dead hang (doorframe or bar)":           "3 × 20–40 sec",
+  "90/90 hip stretch":                      "2 min each side",
+  "World's greatest stretch":               "5 reps each side",
+};
+
+const NOTES = {
+  "EZ bar bent-over row":
+    "Pull to lower chest. Heaviest compound of the week for back thickness.",
+  "Dumbbell single-arm row":
+    "Elbow must travel past torso — not just to your ribs.",
+  "Dumbbell rear delt fly":
+    "Torso nearly horizontal. Slight bend in elbows throughout.",
+  "Dumbbell curl":
+    "Supinate (rotate palm up) fully at the top of each rep.",
+  "EZ bar reverse curl":
+    "Overhand grip builds brachialis — adds arm thickness under the bicep.",
+  "Dumbbell military press (seated floor)":
+    "Full overhead lockout. Seated floor keeps back honest.",
+  "Dumbbell lateral raise":
+    "3-second eccentric on the way down — this is what builds shoulder width.",
+  "Dumbbell floor press":
+    "Elbows at 45° to body, NOT 90°. This protects the shoulder joint.",
+  "Dumbbell flys (floor)":
+    "Slight bend in elbows throughout. Feel the chest stretch at the bottom.",
+  "EZ bar skullcrusher":
+    "Upper arms stay vertical throughout — only the forearm hinges at the elbow.",
+  "Dumbbell Bulgarian split squat":
+    "Priority leg exercise. 3-second descent protects the knee.",
+  "Dumbbell goblet squat":
+    "Pause 1 full second at the bottom for quad activation.",
+  "Stiff-leg deadlift":
+    "Slight knee bend maintained throughout. Feel the hamstring stretch.",
+  "Dumbbell Romanian deadlift":
+    "Lighter than stiff-leg. Focus on glute squeeze hard at lockout.",
+  "Dumbbell reverse lunge":
+    "Step back, not forward. Front shin stays vertical throughout.",
+  "Glute bridge with dumbbell":
+    "Full hip extension — squeeze glutes hard at the top.",
+  "Brisk walk, jog, or cycling":
+    "If you can't hold a conversation, you're going too hard.",
+  "Dead hang (doorframe or bar)":
+    "Relax completely — don't actively engage shoulder muscles.",
+  "90/90 hip stretch":
+    "Sit tall throughout. Feel outer hip (front leg) and hip flexor (rear).",
+  "World's greatest stretch":
+    "Hip flexor, thoracic spine, and groin all in one movement.",
+};
+
+const CUES = {
+  "EZ bar bent-over row": [
+    "Hinge at hips to ~45°, back flat and neutral",
+    "Grip just outside shoulders, overhand",
+    "Pull bar to lower chest — lead with elbows",
+    "3-second lower — resist the weight all the way down"
+  ],
+  "Dumbbell single-arm row": [
+    "Support hand/knee on bench — torso parallel to floor",
+    "Full stretch at bottom — arm nearly straight",
+    "Elbow must pass your ribs going up, not just reach them",
+    "Hold 1 sec at top, slow controlled return"
+  ],
+  "Dumbbell rear delt fly": [
+    "Hinge forward ~70° — torso nearly horizontal",
+    "Arms hang from shoulders with a slight elbow bend",
+    "Raise arms out to shoulder height only — no higher",
+    "Squeeze shoulder blades together at the top"
+  ],
+  "Dumbbell curl": [
+    "Stand upright, elbows pinned to your sides",
+    "Curl up, rotating palms outward (supinate) at the top",
+    "Squeeze bicep hard at top for 1 second",
+    "3-second lower — don't just drop the weight"
+  ],
+  "EZ bar reverse curl": [
+    "Hold EZ bar with overhand (pronated) grip",
+    "Same motion as regular curl — elbows stay fixed",
+    "Use less weight than a regular curl",
+    "Builds brachialis under the bicep for arm thickness"
+  ],
+  "Dumbbell military press (seated floor)": [
+    "Sit upright on floor, back unsupported",
+    "Dumbbells at shoulder height, elbows ~60° to body",
+    "Press directly overhead to full lockout",
+    "Control the descent — don't let them drop"
+  ],
+  "Dumbbell lateral raise": [
+    "Slight forward hip hinge removes traps from the movement",
+    "Raise arms to shoulder height — not higher",
+    "Thumbs slightly lower than pinkies throughout",
+    "3 seconds down — the lowering phase builds the muscle"
+  ],
+  "Dumbbell floor press": [
+    "Lie back, knees bent, feet flat on floor",
+    "Elbows at 45° to torso — not flared wide at 90°",
+    "Press to full lockout, lower until elbows rest on floor",
+    "Brief pause at bottom — no bouncing"
+  ],
+  "Dumbbell flys (floor)": [
+    "Start with dumbbells above chest, palms facing",
+    "Open arms in a wide arc — keep a slight bend in elbows",
+    "Feel the chest stretch at the bottom",
+    "Squeeze chest to bring dumbbells back above sternum"
+  ],
+  "EZ bar skullcrusher": [
+    "Lie flat, arms extended above chest",
+    "Hinge only at the elbow — upper arms stay perfectly vertical",
+    "Lower bar toward forehead slowly (3 seconds)",
+    "Extend forcefully back to lockout — squeeze triceps"
+  ],
+  "Dumbbell Bulgarian split squat": [
+    "Rear foot elevated on chair — laces face down",
+    "Front foot far enough forward that shin stays vertical",
+    "Slow 3-second descent — control prevents knee injury",
+    "Drive through front heel, stand fully upright at top"
+  ],
+  "Dumbbell goblet squat": [
+    "Hold dumbbell vertically at chest throughout",
+    "Feet slightly wider than hip-width, toes out ~30°",
+    "Descend keeping torso upright — chest stays up",
+    "Pause 1 full second at bottom before driving up"
+  ],
+  "Stiff-leg deadlift": [
+    "Feet hip-width, maintain a slight knee bend throughout",
+    "Push hips back — this is a hinge, not a squat",
+    "Lower until you feel hamstring tension — then stop",
+    "Drive hips forward to stand, squeeze glutes at top"
+  ],
+  "Dumbbell Romanian deadlift": [
+    "Stand hip-width, hold dumbbells in front of thighs",
+    "Slight knee bend — maintain it throughout",
+    "Push hips back, lower dumbbells along legs to mid-shin",
+    "Drive hips forward, squeeze glutes hard at lockout"
+  ],
+  "Dumbbell reverse lunge": [
+    "Stand tall holding dumbbells at sides",
+    "Step one foot back — keep front shin vertical",
+    "Lower rear knee toward floor — controlled descent",
+    "Push through front heel to return to standing"
+  ],
+  "Glute bridge with dumbbell": [
+    "Lie on back, knees bent, feet flat and shoulder-width",
+    "Place dumbbell across hip crease and hold it in place",
+    "Drive hips up until body forms a straight line",
+    "Squeeze glutes hard at top — hold 1 second"
+  ],
+  "Brisk walk, jog, or cycling": [
+    "Target: 130–145 bpm — conversational pace",
+    "If you can't speak in full sentences, ease off",
+    "Consistent effort — resist the urge to push harder",
+    "Same pace for the full duration — no surges"
+  ],
+  "Dead hang (doorframe or bar)": [
+    "Hang from bar, shoulder-width grip, overhand",
+    "Relax completely — don't engage shoulder muscles",
+    "Let spine elongate — you should feel gentle traction",
+    "Build time gradually — start with 20 sec if needed"
+  ],
+  "90/90 hip stretch": [
+    "Sit on floor, front knee at 90° and rear knee at 90°",
+    "Sit tall — don't collapse through the hips",
+    "Feel outer hip (front leg) and hip flexor (rear leg)",
+    "Lean gently forward over front shin to intensify"
+  ],
+  "World's greatest stretch": [
+    "Start in deep lunge, back knee lowered to floor",
+    "Place same-side elbow inside front foot on the ground",
+    "Rotate opposite arm up toward the ceiling — eyes follow",
+    "Hold 2 seconds at top, return and switch sides"
+  ],
+};
+
+const KNOWN = new Set([
+  "EZ bar bent-over row", "Dumbbell curl",
+  "Dumbbell military press (seated floor)", "Dumbbell lateral raise",
+  "Dumbbell flys (floor)", "EZ bar skullcrusher",
+  "Dumbbell goblet squat", "Stiff-leg deadlift"
+]);
+
+// ── PLAN DATA ──────────────────────────────────────────────────────────────
+const PLANS = {
+  3: [
+    {
+      tag:"A", name:"Pull + legs", sub:"Back · Biceps · Posterior chain",
+      type:"s", meta:"~55 min",
+      focus:["Back","Posterior chain","Biceps"],
+      tip:"Highest-priority session. Rest 2 min between main sets.",
+      secs:[
+        {lbl:"Main — back", dot:"dp",
+         exs:["EZ bar bent-over row","Dumbbell single-arm row"]},
+        {lbl:"Main — legs (posterior)", dot:"dp",
+         exs:["Stiff-leg deadlift","Dumbbell Bulgarian split squat"]},
+        {lbl:"Accessory", dot:"dt",
+         exs:["Dumbbell curl"]},
+      ]
+    },
+    {
+      tag:"B", name:"Push + shoulders", sub:"Shoulders · Chest · Triceps",
+      type:"s", meta:"~50 min",
+      focus:["Shoulders","Chest","Triceps"],
+      tip:"Lead with shoulders before chest — fresh muscles respond better.",
+      secs:[
+        {lbl:"Main — shoulders", dot:"dp",
+         exs:["Dumbbell military press (seated floor)","Dumbbell lateral raise"]},
+        {lbl:"Main — chest", dot:"dp",
+         exs:["Dumbbell floor press","Dumbbell flys (floor)"]},
+        {lbl:"Accessory", dot:"dt",
+         exs:["EZ bar skullcrusher"]},
+      ]
+    },
+    {
+      tag:"C", name:"Legs + Zone 2", sub:"Quads · Glutes · Cardio",
+      type:"c", meta:"~55 min",
+      focus:["Quads","Glutes","Aerobic base"],
+      tip:"VO₂ max 52 is excellent — maintain it. Zone 2 at 130–145 bpm.",
+      secs:[
+        {lbl:"Strength — legs", dot:"dp",
+         exs:["Dumbbell goblet squat","Dumbbell Romanian deadlift","Dumbbell reverse lunge"]},
+        {lbl:"Zone 2", dot:"dt",
+         exs:["Brisk walk, jog, or cycling"]},
+      ]
+    },
+  ],
+  4: [
+    {
+      tag:"A", name:"Back + biceps", sub:"Full back · Biceps",
+      type:"s", meta:"~45 min",
+      focus:["Back","Biceps"],
+      tip:"Dedicated back session — biggest upgrade in the 4-day plan.",
+      secs:[
+        {lbl:"Main", dot:"dp",
+         exs:["EZ bar bent-over row","Dumbbell single-arm row","Dumbbell rear delt fly"]},
+        {lbl:"Accessory", dot:"dt",
+         exs:["Dumbbell curl","EZ bar reverse curl"]},
+      ]
+    },
+    {
+      tag:"B", name:"Legs", sub:"Full lower body",
+      type:"s", meta:"~50 min",
+      focus:["Quads","Hamstrings","Glutes"],
+      tip:"Priority area. Bulgarian split squats drive the most change.",
+      secs:[
+        {lbl:"Main", dot:"dp",
+         exs:["Dumbbell Bulgarian split squat","Dumbbell goblet squat","Stiff-leg deadlift"]},
+        {lbl:"Accessory", dot:"dt",
+         exs:["Dumbbell reverse lunge","Glute bridge with dumbbell"]},
+      ]
+    },
+    {
+      tag:"C", name:"Push + shoulders", sub:"Shoulders · Chest · Triceps",
+      type:"s", meta:"~45 min",
+      focus:["Shoulders","Chest","Triceps"],
+      tip:"Lead with shoulders. Don't let pressing fatigue rob lateral raises.",
+      secs:[
+        {lbl:"Main — shoulders", dot:"dp",
+         exs:["Dumbbell military press (seated floor)","Dumbbell lateral raise"]},
+        {lbl:"Main — chest", dot:"dp",
+         exs:["Dumbbell floor press","Dumbbell flys (floor)"]},
+        {lbl:"Accessory", dot:"dt",
+         exs:["EZ bar skullcrusher"]},
+      ]
+    },
+    {
+      tag:"D", name:"Zone 2 + mobility", sub:"Cardio · Joint health",
+      type:"c", meta:"~45 min",
+      focus:["Aerobic base","Shoulder health","Hip mobility"],
+      tip:"Don't skip this. Zone 2 and mobility is what separates performance from longevity.",
+      secs:[
+        {lbl:"Zone 2", dot:"dt",
+         exs:["Brisk walk, jog, or cycling"]},
+        {lbl:"Mobility", dot:"da",
+         exs:["Dead hang (doorframe or bar)","90/90 hip stretch","World's greatest stretch"]},
+      ]
+    },
+  ]
+};
+
+// ── STORAGE — week-aware ───────────────────────────────────────────────────
+function getStore() {
+  return JSON.parse(localStorage.getItem('wplan7') || '{"weeks":{}}');
+}
+function saveStore(s) { localStorage.setItem('wplan7', JSON.stringify(s)); }
+function weekKey(d) {
+  const dt = new Date(d);
+  dt.setHours(0,0,0,0);
+  dt.setDate(dt.getDate() - ((dt.getDay() + 6) % 7)); // Monday
+  return dt.toISOString().slice(0, 10);
+}
+function curWk() { return weekKey(new Date()); }
+function getWkSess(wk) {
+  return (getStore().weeks[wk] || {sessions:[]}).sessions;
+}
+function addSess(tag, name, partial) {
+  const s = getStore(), wk = curWk();
+  if (!s.weeks[wk]) s.weeks[wk] = {sessions:[]};
+  s.weeks[wk].sessions = s.weeks[wk].sessions.filter(x => x.tag !== tag);
+  s.weeks[wk].sessions.push({tag, name, ts: Date.now(), mode, partial: !!partial});
+  saveStore(s);
+}
+function remSess(tag) {
+  const s = getStore(), wk = curWk();
+  if (!s.weeks[wk]) return;
+  s.weeks[wk].sessions = s.weeks[wk].sessions.filter(x => x.tag !== tag);
+  saveStore(s);
+}
+function isLogged(tag) { return getWkSess(curWk()).some(x => x.tag === tag); }
+function isPartial(tag) {
+  const e = getWkSess(curWk()).find(x => x.tag === tag);
+  return e && e.partial;
+}
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let mode = 3, dayIdx = 0, histOff = 0;
+
+// ── VIEW SWITCHING ─────────────────────────────────────────────────────────
+function showView(v) {
+  ['w','p','g'].forEach(x => {
+    document.getElementById('v'+x).classList.toggle('on', x === v);
+    document.getElementById('n-'+x).classList.toggle('on', x === v);
+  });
+  if (v === 'p') { histOff = 0; renderProgress(); }
+}
+
+// ── MODE ───────────────────────────────────────────────────────────────────
+function setMode(n) {
+  mode = n; dayIdx = 0;
+  document.getElementById('b3').classList.toggle('on', n === 3);
+  document.getElementById('b4').classList.toggle('on', n === 4);
+  renderTabs(); renderSession();
+}
+
+// ── TABS ───────────────────────────────────────────────────────────────────
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = PLANS[mode].map((d, i) => {
+    const logged = isLogged(d.tag), partial = isPartial(d.tag);
+    const cls = `tab${i===dayIdx?' on':''}${logged&&!partial?' done':''}${partial?' partial':''}`;
+    const suf = logged ? (partial ? ' ~' : ' ✓') : '';
+    return `<button class="${cls}" onclick="selDay(${i})">${d.tag} · ${d.name}${suf}</button>`;
+  }).join('');
+}
+function selDay(i) { dayIdx = i; renderTabs(); renderSession(); }
+
+// ── SESSION ────────────────────────────────────────────────────────────────
+function exrxCard(nm) {
+  const url = EXRX[nm];
+  if (!url) return '';
+  return `<a class="exrx-card" href="${url}" target="_blank" rel="noopener noreferrer">
+    <div class="exrx-badge"><span>ExRx</span></div>
+    <div class="exrx-text">
+      <div class="exrx-title">Watch exercise on ExRx.net</div>
+      <div class="exrx-sub">animated GIF · muscles worked · full instructions</div>
+    </div>
+    <div class="exrx-arrow">↗</div>
+  </a>`;
+}
+
+function renderSession() {
+  const d = PLANS[mode][dayIdx];
+  let h = `<div class="s-head">
+    <div class="s-title">${d.name}</div>
+    <div class="s-meta">${d.meta} · ${d.type==='s'?'Strength':'Longevity'}</div>
+    <div class="focus-row">
+      ${d.focus.map((f,i) =>
+        `<span class="ftag ${i===0?'pri':'sec'}">${i===0?'★ ':''}${f}</span>`
+      ).join('')}
+    </div>
+  </div>`;
+
+  d.secs.forEach(sec => {
+    h += `<div class="slbl">${sec.lbl}</div>`;
+    sec.exs.forEach(nm => {
+      const eid = 'e' + nm.replace(/[^a-z0-9]/gi, '_');
+      h += `<div class="ec" id="${eid}">
+        <div class="ec-hdr" onclick="toggleEx('${eid}')">
+          <div class="edot ${sec.dot}"></div>
+          <div class="e-info">
+            <div class="e-name">${nm}${KNOWN.has(nm)
+              ? '<span class="e-known">you know this</span>' : ''}</div>
+            <div class="e-sets">${SETS[nm] || ''}</div>
+          </div>
+          <div class="echev">▾</div>
+        </div>
+        <div class="e-detail">
+          ${exrxCard(nm)}
+          <div class="cues">
+            <div class="cues-lbl">Key cues</div>
+            ${(CUES[nm] || []).map((c, i) =>
+              `<div class="cue"><span class="cue-n">0${i+1}</span><span>${c}</span></div>`
+            ).join('')}
+          </div>
+          ${NOTES[nm] ? `<div class="e-note">${NOTES[nm]}</div>` : ''}
+        </div>
+      </div>`;
+    });
+  });
+
+  const logged = isLogged(d.tag), partial = isPartial(d.tag);
+  const mainTxt = logged && !partial ? '✓ Session complete'
+    : partial ? '~ Partial — tap to mark complete'
+    : 'Mark session as done';
+  const mainCls = 'log-btn' + (logged && !partial ? ' logged' : partial ? ' partial-btn' : '');
+
+  h += `<div class="log-wrap">
+    <button class="${mainCls}" style="flex:2" onclick="logFull()">${mainTxt}</button>
+    ${logged
+      ? `<button class="log-btn" style="flex:1;font-size:11px;opacity:.5" onclick="undoLog()">Undo</button>`
+      : `<button class="log-btn" style="flex:1;font-size:11px;opacity:.6" onclick="logPartial()">Partial</button>`
+    }
+  </div>`;
+  h += `<div class="coach"><div class="coach-lbl">Coach note</div><p>${d.tip}</p></div>`;
+
+  document.getElementById('sess').innerHTML = h;
+}
+
+function toggleEx(eid) {
+  const card = document.getElementById(eid);
+  const wasOpen = card.classList.contains('open');
+  document.querySelectorAll('.ec.open').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) card.classList.add('open');
+}
+
+// ── LOGGING ────────────────────────────────────────────────────────────────
+function logFull()    { const d = PLANS[mode][dayIdx]; addSess(d.tag,d.name,false); renderTabs(); renderSession(); updateChip(); }
+function logPartial() { const d = PLANS[mode][dayIdx]; addSess(d.tag,d.name,true);  renderTabs(); renderSession(); updateChip(); }
+function undoLog()    { const d = PLANS[mode][dayIdx]; remSess(d.tag);               renderTabs(); renderSession(); updateChip(); }
+
+function updateChip() {
+  const sess = getWkSess(curWk());
+  const done = sess.filter(x => !x.partial).length;
+  const part = sess.filter(x =>  x.partial).length;
+  const wks  = Object.keys(getStore().weeks).sort();
+  const wkNum = Math.max(1, wks.indexOf(curWk()) + 1);
+  let txt = `Wk ${wkNum} · ${done} done`;
+  if (part) txt += ` · ${part} partial`;
+  document.getElementById('wk-chip').textContent = txt;
+}
+
+// ── PROGRESS ───────────────────────────────────────────────────────────────
+function renderProgress() {
+  const store   = getStore();
+  const allWks  = Object.keys(store.weeks).sort();
+  const allSess = allWks.flatMap(w => store.weeks[w].sessions);
+  const completed = allSess.filter(x => !x.partial);
+
+  document.getElementById('st-tot').textContent = completed.length;
+
+  let streak = 0;
+  const cw = curWk();
+  for (let i = allWks.length - 1; i >= 0; i--) {
+    if (store.weeks[allWks[i]].sessions.some(x => !x.partial)) streak++;
+    else if (allWks[i] !== cw) break;
+  }
+  document.getElementById('st-str').textContent = streak;
+  document.getElementById('st-wk').textContent =
+    getWkSess(cw).filter(x => !x.partial).length;
+  const pct = allWks.length > 0
+    ? Math.min(100, Math.round(completed.length / (allWks.length * mode) * 100)) : 0;
+  document.getElementById('st-comp').textContent = pct + '%';
+
+  const viewWk   = allWks.length > 0
+    ? allWks[Math.max(0, allWks.length - 1 - histOff)] : cw;
+  const viewSess = getWkSess(viewWk);
+  document.getElementById('wh-label').textContent =
+    viewWk === cw ? 'this week' : viewWk;
+
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  document.getElementById('wdots').innerHTML = days.map((_, i) => {
+    const dn = i === 6 ? 0 : i + 1;
+    const m  = viewSess.find(s => new Date(s.ts).getDay() === dn);
+    return `<div class="wd-wrap">
+      <div class="wd${m ? (m.partial ? ' partial' : ' done') : ''}"></div>
+      <div class="wd-l">${days[i]}</div>
+    </div>`;
+  }).join('');
+
+  const histEl = document.getElementById('hist-list');
+  if (!allWks.length) {
+    histEl.innerHTML = '<div class="empty-hist">No sessions logged yet.</div>';
+    return;
+  }
+  histEl.innerHTML = [...allWks].reverse().map(wk => {
+    const ws = [...store.weeks[wk].sessions].sort((a,b) => b.ts - a.ts);
+    if (!ws.length) return '';
+    const wn = allWks.indexOf(wk) + 1;
+    const wd = ws.filter(x => !x.partial).length;
+    return `<div class="hist-week">
+      <div class="hw-label">Week ${wn} · ${wk} · ${wd}/${mode} done</div>
+      ${ws.map(s => {
+        const dd = new Date(s.ts);
+        return `<div class="hist-item">
+          <span class="hi-name">Day ${s.tag} · ${s.name}${s.partial
+            ? '<span class="hi-partial"> partial</span>' : ''}</span>
+          <span class="hi-date">
+            ${dd.toLocaleDateString('de-DE',{day:'numeric',month:'short'})}
+            ${dd.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}
+          </span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+}
+
+function prevWeek() {
+  const w = Object.keys(getStore().weeks).sort();
+  histOff = Math.min(histOff + 1, w.length - 1);
+  renderProgress();
+}
+function nextWeek() {
+  histOff = Math.max(histOff - 1, 0);
+  renderProgress();
+}
+function clearAll() {
+  if (confirm('Clear all workout history?')) {
+    localStorage.removeItem('wplan7');
+    renderProgress(); renderTabs(); updateChip();
+  }
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+renderTabs();
+renderSession();
+updateChip();
+</script>
+</body>
+</html>
