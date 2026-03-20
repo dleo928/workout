@@ -8,15 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0c0c0c;--s1:#161616;--s2:#1f1f1f;
-  --b1:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
-  --t1:#f2efe9;--t2:#aaa;--t3:#666;
-  --g:#b8f060;--g2:rgba(184,240,96,0.12);--g3:rgba(184,240,96,0.07);
-  --bl:#60c4f0;--o:#f0a060;--r:#f06060;
+  --bg:#ffffff;--s1:#f5f5f3;--s2:#ececea;
+  --b1:rgba(0,0,0,0.08);--b2:rgba(0,0,0,0.15);
+  --t1:#1a1a1a;--t2:#555;--t3:#999;
+  --g:#2d7a00;--g2:rgba(45,122,0,0.08);--g3:rgba(45,122,0,0.06);
+  --gl:#2d7a00;--gfill:rgba(45,122,0,0.1);--gborder:rgba(45,122,0,0.25);
+  --bl:#0066aa;--o:#c05800;--r:#b30000;
   --mono:'IBM Plex Mono',monospace;--head:'Syne',sans-serif;--rad:11px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{font-size:17px;-webkit-text-size-adjust:100%}
+html{font-size:18px;-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100vh;overflow-x:hidden}
 .app{max-width:430px;margin:0 auto;padding-bottom:96px}
 
@@ -32,32 +33,32 @@ body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100
 .tabs{display:flex;gap:7px;padding:0 18px 17px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex-shrink:0;font-family:var(--mono);font-size:11px;padding:8px 14px;border-radius:99px;border:1px solid var(--b1);background:transparent;color:var(--t3);cursor:pointer;transition:all .18s;white-space:nowrap;letter-spacing:.04em}
-.tab.on{background:var(--g);color:#0c0c0c;border-color:var(--g);font-weight:500}
-.tab.done:not(.on){border-color:rgba(184,240,96,.25);color:rgba(184,240,96,.55)}
-.tab.partial:not(.on){border-color:rgba(240,160,96,.3);color:rgba(240,160,96,.55)}
+.tab.on{background:var(--g);color:#ffffff;border-color:var(--g);font-weight:500}
+.tab.done:not(.on){border-color:rgba(45,122,0,.3);color:rgba(45,122,0,.7)}
+.tab.partial:not(.on){border-color:rgba(192,88,0,.25);color:rgba(192,88,0,.7)}
 
 .s-head{padding:0 18px 15px}
 .s-title{font-size:21px;font-weight:600;letter-spacing:-.02em}
 .s-meta{font-family:var(--mono);font-size:11px;color:var(--t2);margin-top:5px;letter-spacing:.03em}
 .focus-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
 .ftag{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid}
-.ftag.pri{color:var(--g);border-color:rgba(184,240,96,.3);background:var(--g3)}
+.ftag.pri{color:var(--gl);border-color:var(--gborder);background:var(--gfill)}
 .ftag.sec{color:var(--t3);border-color:var(--b1)}
 
 .slbl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);padding:15px 18px 8px}
 
 .ec{margin:0 18px 9px;border:1px solid var(--b1);border-radius:var(--rad);background:var(--s1);overflow:hidden;transition:border-color .18s}
 .ec.open{border-color:var(--b2)}
-.ec.warmup{border-color:rgba(240,160,96,.2);background:#1a1612}
-.ec.warmup.open{border-color:rgba(240,160,96,.4)}
+.ec.warmup{border-color:rgba(192,88,0,.18);background:#fff8f2}
+.ec.warmup.open{border-color:rgba(192,88,0,.35)}
 .ec-hdr{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none}
 .edot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.dp{background:#a07af0}.dt{background:var(--bl)}.da{background:var(--o)}.dw{background:var(--o)}
+.dp{background:#7c4fd4}.dt{background:var(--bl)}.da{background:var(--o)}.dw{background:var(--o)}
 .e-info{flex:1;min-width:0}
 .e-name{font-size:14px;font-weight:500;line-height:1.3}
 .e-sets{font-family:var(--mono);font-size:11px;color:var(--t2);margin-top:3px}
-.e-known{font-family:var(--mono);font-size:10px;color:var(--bl);border:1px solid rgba(96,196,240,.3);padding:1px 7px;border-radius:99px;margin-left:6px;vertical-align:middle;white-space:nowrap}
-.e-wu{font-family:var(--mono);font-size:10px;color:var(--o);border:1px solid rgba(240,160,96,.3);padding:1px 7px;border-radius:99px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+.e-known{font-family:var(--mono);font-size:10px;color:var(--bl);border:1px solid rgba(0,102,170,.25);padding:1px 7px;border-radius:99px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+.e-wu{font-family:var(--mono);font-size:10px;color:var(--o);border:1px solid rgba(192,88,0,.25);padding:1px 7px;border-radius:99px;margin-left:6px;vertical-align:middle;white-space:nowrap}
 .echev{font-size:12px;color:var(--t3);transition:transform .18s;flex-shrink:0}
 .ec.open .echev{transform:rotate(180deg)}
 .e-detail{display:none;border-top:1px solid var(--b1)}
@@ -65,9 +66,9 @@ body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100
 
 /* ExRx link card */
 .exrx-card{display:flex;align-items:center;gap:13px;margin:15px 16px 5px;padding:14px 15px;background:var(--s2);border-radius:var(--rad);border:1px solid var(--b1);text-decoration:none;cursor:pointer;transition:border-color .15s,background .15s}
-.exrx-card:hover{border-color:var(--b2);background:#242424}
-.exrx-badge{flex-shrink:0;width:40px;height:40px;border-radius:9px;background:#1a3a2a;border:1px solid rgba(184,240,96,.2);display:flex;align-items:center;justify-content:center}
-.exrx-badge span{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--g);letter-spacing:.04em}
+.exrx-card:hover{border-color:var(--b2);background:#e4e4e2}
+.exrx-badge{flex-shrink:0;width:40px;height:40px;border-radius:9px;background:#e8f5e2;border:1px solid var(--gborder);display:flex;align-items:center;justify-content:center}
+.exrx-badge span{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--gl);letter-spacing:.04em}
 .exrx-text{flex:1;min-width:0}
 .exrx-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:3px}
 .exrx-sub{font-family:var(--mono);font-size:10px;color:var(--t3)}
@@ -76,22 +77,22 @@ body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100
 .cues{padding:14px 16px}
 .cues-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--t3);text-transform:uppercase;margin-bottom:10px}
 .cue{display:flex;gap:10px;margin-bottom:8px;font-size:13px;line-height:1.55;font-weight:400;color:var(--t1)}
-.cue-n{font-family:var(--mono);font-size:10px;color:var(--g);flex-shrink:0;margin-top:3px}
-.e-note{margin:0 16px 14px;padding:10px 12px;background:var(--g3);border-left:2px solid rgba(184,240,96,.35);border-radius:0 7px 7px 0;font-family:var(--mono);font-size:11px;color:rgba(184,240,96,.85);line-height:1.55}
+.cue-n{font-family:var(--mono);font-size:10px;color:var(--gl);flex-shrink:0;margin-top:3px}
+.e-note{margin:0 16px 14px;padding:10px 12px;background:var(--gfill);border-left:2px solid var(--gborder);border-radius:0 7px 7px 0;font-family:var(--mono);font-size:11px;color:var(--gl);line-height:1.55}
 
 .log-wrap{padding:7px 18px 13px;display:flex;gap:9px}
 .log-btn{padding:14px;border-radius:var(--rad);border:1px solid var(--b2);background:transparent;color:var(--t1);font-family:var(--head);font-size:14px;font-weight:500;cursor:pointer;transition:all .18s}
 .log-btn:active{transform:scale(.98)}
-.log-btn.logged{background:var(--g2);border-color:rgba(184,240,96,.4);color:var(--g)}
-.log-btn.partial-btn{background:rgba(240,160,96,.08);border-color:rgba(240,160,96,.3);color:var(--o)}
+.log-btn.logged{background:var(--gfill);border-color:var(--gborder);color:var(--gl)}
+.log-btn.partial-btn{background:rgba(192,88,0,.07);border-color:rgba(192,88,0,.25);color:var(--o)}
 
-.coach{margin:5px 18px 7px;padding:12px 14px;border-left:2px solid rgba(240,160,96,.4);background:rgba(240,160,96,.05);border-radius:0 9px 9px 0}
+.coach{margin:5px 18px 7px;padding:12px 14px;border-left:2px solid rgba(192,88,0,.3);background:rgba(192,88,0,.04);border-radius:0 9px 9px 0}
 .coach-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--o);text-transform:uppercase;margin-bottom:5px}
-.coach p{font-size:13px;color:rgba(240,160,96,.9);line-height:1.6;font-weight:400}
+.coach p{font-size:13px;color:#7a3800;line-height:1.6;font-weight:400}
 
-.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(12,12,12,.95);backdrop-filter:blur(16px);border-top:1px solid var(--b1);display:flex;padding:10px 12px 24px;gap:4px;z-index:100}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-top:1px solid var(--b1);display:flex;padding:10px 12px 24px;gap:4px;z-index:100}
 .nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px;border-radius:9px;border:none;background:transparent;color:var(--t3);cursor:pointer;font-family:var(--head);transition:color .15s}
-.nbtn.on{color:var(--g)}
+.nbtn.on{color:var(--gl)}
 .n-ic{font-size:18px;line-height:1}
 .n-lb{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase}
 
@@ -101,7 +102,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100
 .pv h2{font-size:21px;font-weight:600;letter-spacing:-.02em;margin-bottom:20px}
 .stat-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
 .stat{background:var(--s1);border-radius:var(--rad);padding:15px;border:1px solid var(--b1)}
-.stat-v{font-family:var(--mono);font-size:28px;color:var(--g);font-weight:500}
+.stat-v{font-family:var(--mono);font-size:28px;color:var(--gl);font-weight:500}
 .stat-l{font-family:var(--mono);font-size:10px;color:var(--t2);margin-top:4px;letter-spacing:.04em}
 .week-hist{background:var(--s1);border-radius:var(--rad);padding:16px;border:1px solid var(--b1);margin-bottom:13px}
 .wh-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
@@ -112,8 +113,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100
 .wdots{display:flex;gap:7px}
 .wd-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
 .wd{width:100%;height:30px;border-radius:5px;background:var(--s2);border:1px solid var(--b1)}
-.wd.done{background:rgba(184,240,96,.18);border-color:rgba(184,240,96,.4)}
-.wd.partial{background:rgba(240,160,96,.14);border-color:rgba(240,160,96,.3)}
+.wd.done{background:rgba(45,122,0,.15);border-color:rgba(45,122,0,.35)}
+.wd.partial{background:rgba(192,88,0,.12);border-color:rgba(192,88,0,.28)}
 .wd-l{font-family:var(--mono);font-size:9px;color:var(--t3)}
 .history-sec{margin-top:5px}
 .hist-title{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:11px}
@@ -124,14 +125,22 @@ body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100
 .hi-date{font-family:var(--mono);font-size:10px;color:var(--t3)}
 .hi-partial{font-family:var(--mono);font-size:10px;color:var(--o);margin-left:7px}
 .empty-hist{font-family:var(--mono);font-size:12px;color:var(--t3);padding:13px 0}
-.clr-btn{width:100%;padding:13px;border-radius:var(--rad);border:1px solid var(--b2);background:transparent;color:var(--r);font-family:var(--head);font-size:13px;cursor:pointer;margin-top:7px}
+.clr-btn{width:100%;padding:13px;border-radius:var(--rad);border:1px solid rgba(179,0,0,.2);background:transparent;color:var(--r);font-family:var(--head);font-size:13px;cursor:pointer;margin-top:7px}
 
 .gv{padding:22px 18px}
 .gv h2{font-size:21px;font-weight:600;letter-spacing:-.02em;margin-bottom:7px}
 .gv .sub{font-family:var(--mono);font-size:12px;color:var(--t2);margin-bottom:20px}
 .g-card{background:var(--s1);border-radius:var(--rad);padding:16px;margin-bottom:11px;border:1px solid var(--b1)}
-.g-card h3{font-size:14px;font-weight:600;color:var(--g);margin-bottom:8px}
+.g-card h3{font-size:14px;font-weight:600;color:var(--gl);margin-bottom:8px}
 .g-card p{font-size:13px;color:var(--t2);line-height:1.65;font-weight:400}
+/* Weight tracking */
+.wt-row{display:flex;align-items:center;gap:10px;margin:0 16px 14px;padding:11px 13px;background:#f0f7ec;border:1px solid rgba(45,122,0,.18);border-radius:9px}
+.wt-lbl{font-family:var(--mono);font-size:11px;color:var(--gl);flex:1}
+.wt-input{width:72px;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--t1);background:#fff;border:1px solid rgba(45,122,0,.3);border-radius:7px;padding:6px 8px;text-align:center;-moz-appearance:textfield}
+.wt-input::-webkit-outer-spin-button,.wt-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.wt-unit{font-family:var(--mono);font-size:11px;color:var(--t2)}
+.wt-toggle{font-family:var(--mono);font-size:10px;color:var(--gl);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;text-decoration-style:dotted}
+
 </style>
 </head>
 <body>
@@ -200,8 +209,8 @@ const EXRX = {
   "Wall angels":                          "https://exrx.net/Stretches/PectoralisMinor/Wall",
   // Main exercises
   "EZ bar bent-over row":                 "https://exrx.net/WeightExercises/BackGeneral/DBBentOverRow",
-  "Dumbbell single-arm row":              "https://exrx.net/WeightExercises/BackGeneral/DBBentOverRow",
-  "Dumbbell rear delt fly":               "https://exrx.net/WeightExercises/DeltoidPosterior/DBRearDeltRow",
+  "Dumbbell kickstand row":               "https://exrx.net/WeightExercises/BackGeneral/DBBentOverRow",
+  "Dumbbell rear delt fly":               "https://exrx.net/WeightExercises/DeltoidPosterior/DBRearLateralRaise",
   "Dumbbell curl":                        "https://exrx.net/WeightExercises/Biceps/DBCurl",
   "EZ bar reverse curl":                  "https://exrx.net/WeightExercises/Brachioradialis/BBReverseCurl",
   "Dumbbell military press (seated floor)":"https://exrx.net/WeightExercises/DeltoidAnterior/DBShoulderPress",
@@ -229,7 +238,7 @@ const SETS = {
   "Kneeling hip flexor stretch":          "30 sec each side",
   "Wall angels":                          "2 × 10 reps",
   "EZ bar bent-over row":                "4 × 6–8 reps",
-  "Dumbbell single-arm row":             "3 × 8–10 each side",
+  "Dumbbell kickstand row":              "3 × 8–10 each side",
   "Dumbbell rear delt fly":              "3 × 15 reps",
   "Dumbbell curl":                       "3 × 10–12 reps",
   "EZ bar reverse curl":                 "2 × 12 reps",
@@ -257,7 +266,7 @@ const NOTES = {
   "Kneeling hip flexor stretch":         "Push hips forward and hold. Counteracts tight hip flexors from sitting.",
   "Wall angels":                         "Keep arms, elbows, and hands touching wall throughout. Excellent shoulder mobility primer.",
   "EZ bar bent-over row":               "Pull to lower chest. Heaviest compound of the week for back thickness.",
-  "Dumbbell single-arm row":            "Elbow must travel past torso — not just to your ribs.",
+  "Dumbbell kickstand row":            "Staggered stance keeps both feet on the floor — no bench needed. Brace your free hand on your front thigh for support.",
   "Dumbbell rear delt fly":             "Torso nearly horizontal. Slight bend in elbows throughout.",
   "Dumbbell curl":                      "Supinate (rotate palm up) fully at the top of each rep.",
   "EZ bar reverse curl":                "Overhand grip builds brachialis — adds arm thickness under the bicep.",
@@ -285,7 +294,7 @@ const CUES = {
   "Kneeling hip flexor stretch":         ["One knee on floor, front foot forward","Push hips forward — feel stretch in front of rear thigh","Hold 30 sec, then switch sides","Keep torso upright throughout"],
   "Wall angels":                         ["Stand with back, head, and arms flat against wall","Slowly raise arms overhead keeping all contact points on wall","Return slowly — maintain contact throughout","2 × 10 reps, no rush"],
   "EZ bar bent-over row":               ["Hinge at hips to ~45°, back flat and neutral","Grip just outside shoulders, overhand","Pull bar to lower chest — lead with elbows","3-second lower — resist the weight all the way down"],
-  "Dumbbell single-arm row":            ["Support hand/knee on bench — torso parallel to floor","Full stretch at bottom — arm nearly straight","Elbow must pass your ribs going up, not just reach them","Hold 1 sec at top, slow controlled return"],
+  "Dumbbell kickstand row":            ["Staggered stance: one foot forward, one back — hinge torso near horizontal","Brace free hand on front thigh for support — no bench needed","Pull elbow past torso, not just to ribs — full range of motion","Hold 1 sec at top, 3-second lower — resist the weight down"],
   "Dumbbell rear delt fly":             ["Hinge forward ~70° — torso nearly horizontal","Arms hang from shoulders with a slight elbow bend","Raise arms out to shoulder height only — no higher","Squeeze shoulder blades together at the top"],
   "Dumbbell curl":                      ["Stand upright, elbows pinned to your sides","Curl up, rotating palms outward (supinate) at the top","Squeeze bicep hard at top for 1 second","3-second lower — don't just drop the weight"],
   "EZ bar reverse curl":                ["Hold EZ bar with overhand (pronated) grip","Same motion as regular curl — elbows stay fixed","Use less weight than a regular curl","Builds brachialis under the bicep for arm thickness"],
@@ -309,6 +318,55 @@ const CUES = {
 const KNOWN = new Set(["EZ bar bent-over row","Dumbbell curl","Dumbbell military press (seated floor)","Dumbbell lateral raise","Dumbbell flys (floor)","EZ bar skullcrusher","Dumbbell goblet squat","Stiff-leg deadlift"]);
 const WARMUPS = new Set(["Arm circles + shoulder rolls","Jumping jacks (2 min)","Bodyweight squat + hip circles","Kneeling hip flexor stretch","Wall angels"]);
 
+// ── DEFAULT WEIGHTS (kg) ───────────────────────────────────────────────────
+// Pre-populated for an active 30yo male, 81kg, 1.92m, ~14% bodyfat.
+// These are realistic working weights for someone who has trained since age 15
+// but hasn't necessarily specialised in these lifts. Err on conservative side —
+// better to start light and progress than to start too heavy.
+const DEFAULT_WEIGHTS = {
+  "EZ bar bent-over row":                  30,  // EZ bar ~5kg + plates. Total load.
+  "Dumbbell kickstand row":                18,  // Per dumbbell
+  "Dumbbell rear delt fly":                 8,  // Per dumbbell — strict form requires light
+  "Dumbbell curl":                         12,  // Per dumbbell
+  "EZ bar reverse curl":                   20,  // Total EZ bar load
+  "Dumbbell military press (seated floor)": 16, // Per dumbbell
+  "Dumbbell lateral raise":                 8,  // Per dumbbell — strict form requires light
+  "Dumbbell floor press":                  18,  // Per dumbbell
+  "Dumbbell flys (floor)":                 12,  // Per dumbbell
+  "EZ bar skullcrusher":                   20,  // Total EZ bar load
+  "Dumbbell Bulgarian split squat":        14,  // Per dumbbell
+  "Dumbbell goblet squat":                 20,  // Single dumbbell held at chest
+  "Stiff-leg deadlift":                    35,  // Total EZ bar load
+  "Dumbbell Romanian deadlift":            18,  // Per dumbbell
+  "Dumbbell reverse lunge":               12,   // Per dumbbell
+  "Glute bridge with dumbbell":            20,  // Single dumbbell on hips
+};
+
+// Weight unit labels
+const WT_LABEL = {
+  "EZ bar bent-over row":                  "kg total",
+  "Dumbbell kickstand row":                "kg each",
+  "Dumbbell rear delt fly":                "kg each",
+  "Dumbbell curl":                         "kg each",
+  "EZ bar reverse curl":                   "kg total",
+  "Dumbbell military press (seated floor)":"kg each",
+  "Dumbbell lateral raise":                "kg each",
+  "Dumbbell floor press":                  "kg each",
+  "Dumbbell flys (floor)":               "kg each",
+  "EZ bar skullcrusher":                   "kg total",
+  "Dumbbell Bulgarian split squat":        "kg each",
+  "Dumbbell goblet squat":                 "kg",
+  "Stiff-leg deadlift":                    "kg total",
+  "Dumbbell Romanian deadlift":            "kg each",
+  "Dumbbell reverse lunge":               "kg each",
+  "Glute bridge with dumbbell":            "kg",
+};
+
+// Weight storage helpers
+function getWeights(){return JSON.parse(localStorage.getItem('weights')||'{}')}
+function saveWeight(nm,val){const w=getWeights();w[nm]=val;localStorage.setItem('weights',JSON.stringify(w))}
+function getWeight(nm){const w=getWeights();return w[nm]!==undefined?w[nm]:DEFAULT_WEIGHTS[nm]}
+
 // ── PLAN DATA ──────────────────────────────────────────────────────────────
 // Warm-up selection rationale:
 // Day A (Pull+Legs / Back+Biceps): arm circles prime shoulders for rows
@@ -322,7 +380,7 @@ const PLANS = {
      tip:"Highest-priority session. Rest 2 min between main sets.",
      secs:[
        {lbl:"Warm-up (5 min)",dot:"dw",wu:true,exs:["Arm circles + shoulder rolls","Bodyweight squat + hip circles"]},
-       {lbl:"Main — back",dot:"dp",exs:["EZ bar bent-over row","Dumbbell single-arm row"]},
+       {lbl:"Main — back",dot:"dp",exs:["EZ bar bent-over row","Dumbbell kickstand row"]},
        {lbl:"Main — legs (posterior)",dot:"dp",exs:["Stiff-leg deadlift","Dumbbell Bulgarian split squat"]},
        {lbl:"Accessory",dot:"dt",exs:["Dumbbell curl"]},
      ]},
@@ -350,7 +408,7 @@ const PLANS = {
      tip:"Dedicated back session — biggest upgrade in the 4-day plan.",
      secs:[
        {lbl:"Warm-up (5 min)",dot:"dw",wu:true,exs:["Arm circles + shoulder rolls","Bodyweight squat + hip circles"]},
-       {lbl:"Main",dot:"dp",exs:["EZ bar bent-over row","Dumbbell single-arm row","Dumbbell rear delt fly"]},
+       {lbl:"Main",dot:"dp",exs:["EZ bar bent-over row","Dumbbell kickstand row","Dumbbell rear delt fly"]},
        {lbl:"Accessory",dot:"dt",exs:["Dumbbell curl","EZ bar reverse curl"]},
      ]},
     {tag:"B",name:"Legs",sub:"Full lower body",type:"s",meta:"~50 min",
@@ -432,6 +490,19 @@ function exrxCard(nm){
   </a>`;
 }
 
+function weightRow(nm){
+  if(!DEFAULT_WEIGHTS[nm])return'';
+  const val=getWeight(nm);
+  const unit=WT_LABEL[nm]||'kg';
+  const id='wt_'+nm.replace(/[^a-z0-9]/gi,'_');
+  return`<div class="wt-row">
+    <span class="wt-lbl">Weight used</span>
+    <input class="wt-input" type="number" id="${id}" value="${val}" min="0.5" max="200" step="0.5"
+      onchange="saveWeight('${nm.replace(/'/g,"\\'")}',parseFloat(this.value)||0)">
+    <span class="wt-unit">${unit}</span>
+  </div>`;
+}
+
 function renderSession(){
   const d=PLANS[mode][dayIdx];
   let h=`<div class="s-head"><div class="s-title">${d.name}</div><div class="s-meta">${d.meta} · ${d.type==='s'?'Strength':'Longevity'}</div><div class="focus-row">${d.focus.map((f,i)=>`<span class="ftag ${i===0?'pri':'sec'}">${i===0?'★ ':''}${f}</span>`).join('')}</div></div>`;
@@ -453,6 +524,7 @@ function renderSession(){
         </div>
         <div class="e-detail">
           ${exrxCard(nm)}
+          ${weightRow(nm)}
           <div class="cues"><div class="cues-lbl">Key cues</div>${(CUES[nm]||[]).map((c,i)=>`<div class="cue"><span class="cue-n">0${i+1}</span><span>${c}</span></div>`).join('')}</div>
           ${NOTES[nm]?`<div class="e-note">${NOTES[nm]}</div>`:''}
         </div>
