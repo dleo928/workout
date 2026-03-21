@@ -112,9 +112,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100
 .wh-nav span{font-family:var(--mono);font-size:11px;color:var(--t2)}
 .wdots{display:flex;gap:7px}
 .wd-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
-.wd{width:100%;height:30px;border-radius:5px;background:var(--s2);border:1px solid var(--b1)}
+.wd{width:100%;height:38px;border-radius:5px;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center}
 .wd.done{background:rgba(45,122,0,.15);border-color:rgba(45,122,0,.35)}
 .wd.partial{background:rgba(192,88,0,.12);border-color:rgba(192,88,0,.28)}
+.wd-tag{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--t3)}
+.wd.done .wd-tag{color:rgba(45,122,0,.9)}
+.wd.partial .wd-tag{color:rgba(192,88,0,.9)}
 .wd-l{font-family:var(--mono);font-size:9px;color:var(--t3)}
 .history-sec{margin-top:5px}
 .hist-title{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:11px}
@@ -152,8 +155,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--head);min-height:100
     <span class="week-chip" id="wk-chip">Wk 1 · 0 done</span>
   </div>
   <div class="mode-row">
-    <button class="mbtn on" id="b3" onclick="setMode(3)">3-day week</button>
-    <button class="mbtn" id="b4" onclick="setMode(4)">4-day week</button>
+    <button class="mbtn" id="b3" onclick="setMode(3)">3-day week</button>
+    <button class="mbtn on" id="b4" onclick="setMode(4)">4-day week</button>
   </div>
   <div class="tabs" id="tabs"></div>
   <div id="sess"></div>
@@ -218,13 +221,12 @@ const EXRX = {
   "Dumbbell floor press":                 "https://exrx.net/WeightExercises/PectoralSternal/DBBenchPress",
   "Dumbbell flys (floor)":               "https://exrx.net/WeightExercises/PectoralSternal/DBFly",
   "EZ bar skullcrusher":                  "https://exrx.net/WeightExercises/Triceps/BBLyingTriExtSC",
-  "Dumbbell Bulgarian split squat":       "https://exrx.net/WeightExercises/GluteusMaximus/DBSplitSquat",
   "Dumbbell goblet squat":               "https://exrx.net/WeightExercises/Kettlebell/KBGobletSquat",
   "Stiff-leg deadlift":                   "https://exrx.net/WeightExercises/Hamstrings/DBStrBackStrLegDeadlift",
   "Dumbbell Romanian deadlift":           "https://exrx.net/WeightExercises/OlympicLifts/RomanianDeadlift",
   "Dumbbell reverse lunge":              "https://exrx.net/WeightExercises/Quadriceps/DBRearLunge",
   "Glute bridge with dumbbell":           "https://exrx.net/WeightExercises/GluteusMaximus/BBHipThrust",
-  "Brisk walk, jog, or cycling":          "https://exrx.net/Aerobic/AerobicGoals",
+  "Dumbbell calf raise":                  "https://exrx.net/WeightExercises/Gastrocnemius/DBStandingCalfRaise",
   "Dead hang (doorframe or bar)":         "https://exrx.net/Stretches/BackGeneral/FixedBar",
   "90/90 hip stretch":                    "https://exrx.net/Stretches/HipFlexors/LyingHipFlexor",
   "World's greatest stretch":             "https://exrx.net/Stretches/HipFlexors/LungingHipFlexor",
@@ -247,12 +249,12 @@ const SETS = {
   "Dumbbell floor press":                "3 × 8–10 reps",
   "Dumbbell flys (floor)":              "3 × 10–12 reps",
   "EZ bar skullcrusher":                 "3 × 10–12 reps",
-  "Dumbbell Bulgarian split squat":      "4 × 8–10 each side",
   "Dumbbell goblet squat":              "4 × 10–12 reps",
   "Stiff-leg deadlift":                  "4 × 8–10 reps",
   "Dumbbell Romanian deadlift":          "3 × 10 reps",
   "Dumbbell reverse lunge":             "3 × 10 each side",
   "Glute bridge with dumbbell":          "3 × 15 reps",
+  "Dumbbell calf raise":                 "3 × 15–20 reps",
   "Brisk walk, jog, or cycling":         "25–30 min · 130–145 bpm",
   "Dead hang (doorframe or bar)":        "3 × 20–40 sec",
   "90/90 hip stretch":                   "2 min each side",
@@ -275,12 +277,12 @@ const NOTES = {
   "Dumbbell floor press":               "Elbows at 45° to body, NOT 90°. This protects the shoulder joint.",
   "Dumbbell flys (floor)":             "Slight bend in elbows throughout. Feel the chest stretch at the bottom.",
   "EZ bar skullcrusher":                "Upper arms stay vertical throughout — only the forearm hinges at the elbow.",
-  "Dumbbell Bulgarian split squat":     "Priority leg exercise. 3-second descent protects the knee.",
   "Dumbbell goblet squat":             "Pause 1 full second at the bottom for quad activation.",
   "Stiff-leg deadlift":                 "Slight knee bend maintained throughout. Feel the hamstring stretch.",
   "Dumbbell Romanian deadlift":         "Lighter than stiff-leg. Focus on glute squeeze hard at lockout.",
   "Dumbbell reverse lunge":            "Step back, not forward. Front shin stays vertical throughout.",
   "Glute bridge with dumbbell":         "Full hip extension — squeeze glutes hard at the top.",
+  "Dumbbell calf raise":                "3-second eccentric on the way down — the calf responds best to slow lowering and high reps.",
   "Brisk walk, jog, or cycling":        "If you can't hold a conversation, you're going too hard.",
   "Dead hang (doorframe or bar)":       "Relax completely — don't actively engage shoulder muscles.",
   "90/90 hip stretch":                  "Sit tall throughout. Feel outer hip (front leg) and hip flexor (rear).",
@@ -303,12 +305,12 @@ const CUES = {
   "Dumbbell floor press":               ["Lie back, knees bent, feet flat on floor","Elbows at 45° to torso — not flared wide at 90°","Press to full lockout, lower until elbows rest on floor","Brief pause at bottom — no bouncing"],
   "Dumbbell flys (floor)":             ["Start with dumbbells above chest, palms facing","Open arms in a wide arc — keep a slight bend in elbows","Feel the chest stretch at the bottom","Squeeze chest to bring dumbbells back above sternum"],
   "EZ bar skullcrusher":                ["Lie flat, arms extended above chest","Hinge only at the elbow — upper arms stay perfectly vertical","Lower bar toward forehead slowly (3 seconds)","Extend forcefully back to lockout — squeeze triceps"],
-  "Dumbbell Bulgarian split squat":     ["Rear foot elevated on chair — laces face down","Front foot far enough forward that shin stays vertical","Slow 3-second descent — control prevents knee injury","Drive through front heel, stand fully upright at top"],
   "Dumbbell goblet squat":             ["Hold dumbbell vertically at chest throughout","Feet slightly wider than hip-width, toes out ~30°","Descend keeping torso upright — chest stays up","Pause 1 full second at bottom before driving up"],
   "Stiff-leg deadlift":                 ["Feet hip-width, maintain a slight knee bend throughout","Push hips back — this is a hinge, not a squat","Lower until you feel hamstring tension — then stop","Drive hips forward to stand, squeeze glutes at top"],
   "Dumbbell Romanian deadlift":         ["Stand hip-width, hold dumbbells in front of thighs","Slight knee bend — maintain it throughout","Push hips back, lower dumbbells along legs to mid-shin","Drive hips forward, squeeze glutes hard at lockout"],
   "Dumbbell reverse lunge":            ["Stand tall holding dumbbells at sides","Step one foot back — keep front shin vertical","Lower rear knee toward floor — controlled descent","Push through front heel to return to standing"],
   "Glute bridge with dumbbell":         ["Lie on back, knees bent, feet flat and shoulder-width","Place dumbbell across hip crease and hold it in place","Drive hips up until body forms a straight line","Squeeze glutes hard at top — hold 1 second"],
+  "Dumbbell calf raise":                ["Hold dumbbells at sides, stand on flat floor","Rise onto toes as high as possible — full plantarflexion","Hold 1 second at the top — squeeze calves","Lower over 3 seconds — full stretch at the bottom"],
   "Brisk walk, jog, or cycling":        ["Target: 130–145 bpm — conversational pace","If you can't speak in full sentences, ease off","Consistent effort — resist the urge to push harder","Same pace for the full duration — no surges"],
   "Dead hang (doorframe or bar)":       ["Hang from bar, shoulder-width grip, overhand","Relax completely — don't engage shoulder muscles","Let spine elongate — you should feel gentle traction","Build time gradually — start with 20 sec if needed"],
   "90/90 hip stretch":                  ["Sit on floor, front knee at 90° and rear knee at 90°","Sit tall — don't collapse through the hips","Feel outer hip (front leg) and hip flexor (rear leg)","Lean gently forward over front shin to intensify"],
@@ -334,12 +336,12 @@ const DEFAULT_WEIGHTS = {
   "Dumbbell floor press":                  18,  // Per dumbbell
   "Dumbbell flys (floor)":                 12,  // Per dumbbell
   "EZ bar skullcrusher":                   20,  // Total EZ bar load
-  "Dumbbell Bulgarian split squat":        14,  // Per dumbbell
-  "Dumbbell goblet squat":                 20,  // Single dumbbell held at chest
-  "Stiff-leg deadlift":                    35,  // Total EZ bar load
-  "Dumbbell Romanian deadlift":            18,  // Per dumbbell
-  "Dumbbell reverse lunge":               12,   // Per dumbbell
-  "Glute bridge with dumbbell":            20,  // Single dumbbell on hips
+  "Dumbbell goblet squat":               20,  // Single dumbbell held at chest
+  "Stiff-leg deadlift":                  35,  // Total EZ bar load
+  "Dumbbell Romanian deadlift":          18,  // Per dumbbell
+  "Dumbbell reverse lunge":             12,   // Per dumbbell
+  "Dumbbell calf raise":                16,   // Per dumbbell — calves are strong, go heavier
+  "Glute bridge with dumbbell":          20,  // Single dumbbell on hips
 };
 
 // Weight unit labels
@@ -354,12 +356,12 @@ const WT_LABEL = {
   "Dumbbell floor press":                  "kg each",
   "Dumbbell flys (floor)":               "kg each",
   "EZ bar skullcrusher":                   "kg total",
-  "Dumbbell Bulgarian split squat":        "kg each",
-  "Dumbbell goblet squat":                 "kg",
-  "Stiff-leg deadlift":                    "kg total",
-  "Dumbbell Romanian deadlift":            "kg each",
-  "Dumbbell reverse lunge":               "kg each",
-  "Glute bridge with dumbbell":            "kg",
+  "Dumbbell goblet squat":               "kg",
+  "Stiff-leg deadlift":                  "kg total",
+  "Dumbbell Romanian deadlift":          "kg each",
+  "Dumbbell reverse lunge":             "kg each",
+  "Dumbbell calf raise":                "kg each",
+  "Glute bridge with dumbbell":          "kg",
 };
 
 // Weight storage helpers
@@ -381,8 +383,8 @@ const PLANS = {
      secs:[
        {lbl:"Warm-up (5 min)",dot:"dw",wu:true,exs:["Arm circles + shoulder rolls","Bodyweight squat + hip circles"]},
        {lbl:"Main — back",dot:"dp",exs:["EZ bar bent-over row","Dumbbell kickstand row"]},
-       {lbl:"Main — legs (posterior)",dot:"dp",exs:["Stiff-leg deadlift","Dumbbell Bulgarian split squat"]},
-       {lbl:"Accessory",dot:"dt",exs:["Dumbbell curl"]},
+       {lbl:"Main — legs (posterior)",dot:"dp",exs:["Stiff-leg deadlift","Dumbbell reverse lunge"]},
+       {lbl:"Accessory",dot:"dt",exs:["Dumbbell curl","Dumbbell calf raise"]},
      ]},
     {tag:"B",name:"Push + shoulders",sub:"Shoulders · Chest · Triceps",type:"s",meta:"~50 min",
      focus:["Shoulders","Chest","Triceps"],
@@ -399,6 +401,7 @@ const PLANS = {
      secs:[
        {lbl:"Warm-up (5 min)",dot:"dw",wu:true,exs:["Jumping jacks (2 min)","Kneeling hip flexor stretch"]},
        {lbl:"Strength — legs",dot:"dp",exs:["Dumbbell goblet squat","Dumbbell Romanian deadlift","Dumbbell reverse lunge"]},
+       {lbl:"Accessory",dot:"dt",exs:["Dumbbell calf raise"]},
        {lbl:"Zone 2",dot:"dt",exs:["Brisk walk, jog, or cycling"]},
      ]},
   ],
@@ -412,12 +415,12 @@ const PLANS = {
        {lbl:"Accessory",dot:"dt",exs:["Dumbbell curl","EZ bar reverse curl"]},
      ]},
     {tag:"B",name:"Legs",sub:"Full lower body",type:"s",meta:"~50 min",
-     focus:["Quads","Hamstrings","Glutes"],
-     tip:"Priority area. Bulgarian split squats drive the most change.",
+     focus:["Quads","Hamstrings","Glutes","Calves"],
+     tip:"Reverse lunge keeps the knee safer than the split squat while still delivering strong quad and glute stimulus. Focus on front shin vertical throughout.",
      secs:[
        {lbl:"Warm-up (5 min)",dot:"dw",wu:true,exs:["Jumping jacks (2 min)","Kneeling hip flexor stretch"]},
-       {lbl:"Main",dot:"dp",exs:["Dumbbell Bulgarian split squat","Dumbbell goblet squat","Stiff-leg deadlift"]},
-       {lbl:"Accessory",dot:"dt",exs:["Dumbbell reverse lunge","Glute bridge with dumbbell"]},
+       {lbl:"Main",dot:"dp",exs:["Dumbbell reverse lunge","Dumbbell goblet squat","Stiff-leg deadlift"]},
+       {lbl:"Accessory",dot:"dt",exs:["Glute bridge with dumbbell","Dumbbell calf raise"]},
      ]},
     {tag:"C",name:"Push + shoulders",sub:"Shoulders · Chest · Triceps",type:"s",meta:"~45 min",
      focus:["Shoulders","Chest","Triceps"],
@@ -448,16 +451,16 @@ function getWkSess(wk){return(getStore().weeks[wk]||{sessions:[]}).sessions}
 function addSess(tag,name,partial){
   const s=getStore(),wk=curWk();
   if(!s.weeks[wk])s.weeks[wk]={sessions:[]};
-  s.weeks[wk].sessions=s.weeks[wk].sessions.filter(x=>x.tag!==tag);
+  s.weeks[wk].sessions=s.weeks[wk].sessions.filter(x=>!(x.tag===tag&&x.mode===mode));
   s.weeks[wk].sessions.push({tag,name,ts:Date.now(),mode,partial:!!partial});
   saveStore(s);
 }
-function remSess(tag){const s=getStore(),wk=curWk();if(!s.weeks[wk])return;s.weeks[wk].sessions=s.weeks[wk].sessions.filter(x=>x.tag!==tag);saveStore(s)}
-function isLogged(tag){return getWkSess(curWk()).some(x=>x.tag===tag)}
-function isPartial(tag){const e=getWkSess(curWk()).find(x=>x.tag===tag);return e&&e.partial}
+function remSess(tag){const s=getStore(),wk=curWk();if(!s.weeks[wk])return;s.weeks[wk].sessions=s.weeks[wk].sessions.filter(x=>!(x.tag===tag&&x.mode===mode));saveStore(s)}
+function isLogged(tag){return getWkSess(curWk()).some(x=>x.tag===tag&&x.mode===mode)}
+function isPartial(tag){const e=getWkSess(curWk()).find(x=>x.tag===tag&&x.mode===mode);return e&&e.partial}
 
 // ── STATE ──────────────────────────────────────────────────────────────────
-let mode=3,dayIdx=0,histOff=0;
+let mode=4,dayIdx=0,histOff=0;
 
 function showView(v){
   ['w','p','g'].forEach(x=>{document.getElementById('v'+x).classList.toggle('on',x===v);document.getElementById('n-'+x).classList.toggle('on',x===v)});
@@ -552,7 +555,7 @@ function logPartial(){const d=PLANS[mode][dayIdx];addSess(d.tag,d.name,true);ren
 function undoLog(){const d=PLANS[mode][dayIdx];remSess(d.tag);renderTabs();renderSession();updateChip();}
 
 function updateChip(){
-  const sess=getWkSess(curWk());
+  const sess=getWkSess(curWk()).filter(x=>x.mode===mode);
   const done=sess.filter(x=>!x.partial).length;
   const part=sess.filter(x=>x.partial).length;
   const wks=Object.keys(getStore().weeks).sort();
@@ -565,27 +568,40 @@ function updateChip(){
 function renderProgress(){
   const store=getStore();
   const allWks=Object.keys(store.weeks).sort();
-  const allSess=allWks.flatMap(w=>store.weeks[w].sessions);
+  // filter all sessions to current mode
+  const allSess=allWks.flatMap(w=>store.weeks[w].sessions.filter(x=>x.mode===mode));
   const completed=allSess.filter(x=>!x.partial);
   document.getElementById('st-tot').textContent=completed.length;
   let streak=0;const cw=curWk();
-  for(let i=allWks.length-1;i>=0;i--){if(store.weeks[allWks[i]].sessions.some(x=>!x.partial))streak++;else if(allWks[i]!==cw)break;}
+  for(let i=allWks.length-1;i>=0;i--){
+    const wkSess=store.weeks[allWks[i]].sessions.filter(x=>x.mode===mode);
+    if(wkSess.some(x=>!x.partial))streak++;
+    else if(allWks[i]!==cw)break;
+  }
   document.getElementById('st-str').textContent=streak;
-  document.getElementById('st-wk').textContent=getWkSess(cw).filter(x=>!x.partial).length;
+  document.getElementById('st-wk').textContent=getWkSess(cw).filter(x=>x.mode===mode&&!x.partial).length;
   const pct=allWks.length>0?Math.min(100,Math.round(completed.length/(allWks.length*mode)*100)):0;
   document.getElementById('st-comp').textContent=pct+'%';
   const viewWk=allWks.length>0?allWks[Math.max(0,allWks.length-1-histOff)]:cw;
-  const viewSess=getWkSess(viewWk);
+  const viewSess=getWkSess(viewWk).filter(x=>x.mode===mode);
   document.getElementById('wh-label').textContent=viewWk===cw?'this week':viewWk;
   const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   document.getElementById('wdots').innerHTML=days.map((_,i)=>{
-    const dn=i===6?0:i+1;const m=viewSess.find(s=>new Date(s.ts).getDay()===dn);
-    return`<div class="wd-wrap"><div class="wd${m?(m.partial?' partial':' done'):''}"></div><div class="wd-l">${days[i]}</div></div>`;
+    const dn=i===6?0:i+1;
+    // find all sessions on this day of week
+    const matches=viewSess.filter(s=>new Date(s.ts).getDay()===dn);
+    // pick the most recent one for the dot state
+    const m=matches.sort((a,b)=>b.ts-a.ts)[0];
+    const cls=m?(m.partial?' partial':' done'):'';
+    // show workout tag(s) done that day
+    const tagLabel=matches.length>0?matches.map(s=>s.tag).join('/'):'';
+    return`<div class="wd-wrap"><div class="wd${cls}"><span class="wd-tag">${tagLabel}</span></div><div class="wd-l">${days[i]}</div></div>`;
   }).join('');
   const histEl=document.getElementById('hist-list');
   if(!allWks.length){histEl.innerHTML='<div class="empty-hist">No sessions logged yet.</div>';return;}
   histEl.innerHTML=[...allWks].reverse().map(wk=>{
-    const ws=[...store.weeks[wk].sessions].sort((a,b)=>b.ts-a.ts);
+    // sort ascending (oldest first = chronological reading order)
+    const ws=[...store.weeks[wk].sessions].filter(x=>x.mode===mode).sort((a,b)=>a.ts-b.ts);
     if(!ws.length)return'';
     const wn=allWks.indexOf(wk)+1,wd=ws.filter(x=>!x.partial).length;
     return`<div class="hist-week"><div class="hw-label">Week ${wn} · ${wk} · ${wd}/${mode} done</div>${ws.map(s=>{const d=new Date(s.ts);return`<div class="hist-item"><span class="hi-name">Day ${s.tag} · ${s.name}${s.partial?'<span class="hi-partial"> partial</span>':''}</span><span class="hi-date">${d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} ${d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</span></div>`;}).join('')}</div>`;
