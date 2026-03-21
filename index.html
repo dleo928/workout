@@ -611,6 +611,28 @@ function prevWeek(){const w=Object.keys(getStore().weeks).sort();histOff=Math.mi
 function nextWeek(){histOff=Math.max(histOff-1,0);renderProgress();}
 function clearAll(){if(confirm('Clear all workout history?')){localStorage.removeItem('wplan8');renderProgress();renderTabs();updateChip();}}
 
+// On startup: open the next workout in the rotation, continuing across week boundaries.
+// Find the most recently completed session across ALL weeks for this mode,
+// then open the day that follows it in the cycle (A→B→C→D→A→...).
+// If nothing has ever been logged, open Day A.
+function getStartDay(){
+  const store=getStore();
+  const allWks=Object.keys(store.weeks).sort();
+  const days=PLANS[mode];
+  // collect all completed sessions for this mode across all weeks, sorted oldest→newest
+  const allSess=allWks
+    .flatMap(w=>store.weeks[w].sessions)
+    .filter(x=>x.mode===mode&&!x.partial)
+    .sort((a,b)=>a.ts-b.ts);
+  if(allSess.length===0)return 0;
+  // find the tag of the most recently completed session
+  const lastTag=allSess[allSess.length-1].tag;
+  const lastIdx=days.findIndex(d=>d.tag===lastTag);
+  // next in rotation, wrapping around
+  return(lastIdx+1)%days.length;
+}
+
+dayIdx=getStartDay();
 renderTabs();renderSession();updateChip();
 </script>
 </body>
